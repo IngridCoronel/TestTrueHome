@@ -95,6 +95,11 @@ namespace ApiTestTrueHome.Services
 
             var act = _repository.Get(p => p.Id == idActivity).Result.FirstOrDefault();
 
+            if (act == null)
+            {
+                return 0;
+            }
+
             //Actividad cancelada
             if (act.Status == "Canceled")
             {

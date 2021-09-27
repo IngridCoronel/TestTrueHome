@@ -13,13 +13,13 @@ namespace ApiTestTrueHome.Repository
     public class PropertyRepository : Repository<Property>,IPropertyRepository
     {
         public PropertyRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
+        { }
 
-        public bool DeleteProperty(Property property)
-        {
-            _db.Property.Remove(property);
-            return SaveProperty();
-        }
+        //public bool DeleteProperty(Property property)
+        //{
+        //    _db.Property.Remove(property);
+        //    return SaveProperty();
+        //}
         //private readonly ApplicationDbContext _db;
         //public PropertyRepository(ApplicationDbContext db)
         //{
