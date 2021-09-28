@@ -10,7 +10,6 @@ namespace ApiTestTrueHome.Models
     public class ActivityListStatusDto
     {
         [Key]
-        [Required(ErrorMessage = "El campo Status es obligatorio")]
         public string Status { get; set; }
         [Required(ErrorMessage = "El campo IniSchedule es obligatorio")]
         public DateTime IniSchedule { get; set; }
