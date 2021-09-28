@@ -43,8 +43,6 @@ namespace ApiTestTrueHome.Services
             //var scheduleDay = _repository.Get(a => a.Id == activity.Property_Id).Result.Where(s => s.Schedule <= EndDate).FirstOrDefault();
             var scheduleDay = _repository.Get(a => a.Id == activity.Property_Id).Result.Where(s => s.Status != "Canceled" && s.Schedule >= IniDate && s.Schedule <= EndDate).ToList();
 
-            
-
             _repository.Insert(activity);
             _unitOfWork.Save();
             return true;
@@ -70,6 +68,11 @@ namespace ApiTestTrueHome.Services
 
             var act = _repository.Get(p => p.Id == idActivity).Result.FirstOrDefault();
             
+            if (act == null)
+            {
+                return 0;
+            }
+
             //Actividad cancelada
             if (act.Status == "Canceled")
             {
@@ -83,7 +86,6 @@ namespace ApiTestTrueHome.Services
             }
 
             act.Schedule = newScheduleDay;
-            act.Status = "Reschedule";
             act.Updated_at = DateTime.UtcNow;
 
             await _repository.Update(act);
@@ -101,7 +103,7 @@ namespace ApiTestTrueHome.Services
             }
 
             //Actividad cancelada
-            if (act.Status == "Canceled")
+            if (act.Status == "Canceled" || act.Status == "Done")
             {
                 return 0;
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiTestTrueHome.Models.Dtos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,7 +16,29 @@ namespace ApiTestTrueHome.Models
         public DateTime Schedule { get; set; }
         [Required(ErrorMessage = "El campo Title es obligatorio")]
         public string Title { get; set; }
+        public string Status { get; set; }
+
+        private string condition;
+        public string Condition
+        {
+            get
+            {
+                if (Status == "Active")
+                {
+                    if (Schedule >= DateTime.Now)
+                        condition = "Pendiente a realizar";
+                    else
+                        condition = "Atrasada";
+                }
+                else if (Status == "Done")
+                {
+                    condition = "Finalizada";
+                }
+                return condition;
+            }
+            set { condition = value; }
+        }
         public int Property_Id { get; set; }
-        public Property Property { get; set; }
+        public PropertyDto Property { get; set; }
     }
 }

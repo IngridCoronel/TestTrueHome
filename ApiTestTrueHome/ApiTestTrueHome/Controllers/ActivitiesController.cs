@@ -49,7 +49,9 @@ namespace ApiTestTrueHome.Controllers
                 return NotFound();
             }
 
-            return Ok(itemActivity);
+            var activity = _mapper.Map<ActivityDto>(itemActivity);
+
+            return Ok(activity);
         }
 
         [HttpPost("CreateActivity")]
@@ -68,13 +70,13 @@ namespace ApiTestTrueHome.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return NoContent();
+            return Ok(ActivityDto);
         }
         
-        [HttpGet("GetActivitiesForDay/{propertyId}/{scheduleDay}")]
-        public IActionResult GetActivitiesForDay(int propertyId, DateTime scheduleDay)
+        [HttpGet("GetActivitiesForDay")]
+        public IActionResult GetActivitiesForDay([FromBody] ActivityDtoRequest activityDtoResch)
         {
-            var listActivities = _actService.GetActivitiesForDay(propertyId, scheduleDay);
+            var listActivities = _actService.GetActivitiesForDay(activityDtoResch.idActivity, activityDtoResch.newScheduleDay);
 
             if (listActivities == null || listActivities.Count == 0)
             {
@@ -86,40 +88,35 @@ namespace ApiTestTrueHome.Controllers
         }
 
         [HttpPut("RescheduleActivitie")]
-        public async Task<ActionResult> RescheduleActivity(int idActivity, DateTime newScheduleDay)
+        public async Task<ActionResult> RescheduleActivity([FromBody] ActivityDtoRequest activityDtoResch)
         {
             
-            var itemActivity = _actService.GetActivity(idActivity);
-
-            //var activity = _mapper.Map<Activity>(ActivityDto);
-
-            if (await _actService.RescheduleActivity(idActivity, newScheduleDay) == 0)
+            if (await _actService.RescheduleActivity(activityDtoResch.idActivity, activityDtoResch.newScheduleDay) == 0)
             {
                 ModelState.AddModelError("", $"Algo salió mal al reagendar la actividad.");
                 return StatusCode(500, ModelState);
             }
 
-            //return CreatedAtRoute("GetProperty", new { propertyId = property.Id }, property);
-            return NoContent();
 
+            var itemActivity = _actService.GetActivity(activityDtoResch.idActivity);
+            var activity = _mapper.Map<ActivityDto>(itemActivity);
+
+            return Ok(activity);
         }
 
         [HttpDelete("CancelActivitie")]
-        public async Task<ActionResult> CancelActivity(int idActivity)
+        public async Task<ActionResult> CancelActivity([FromBody] ActivityDtoRequest activityDtoResch)
         {
-
-            var itemActivity = _actService.GetActivity(idActivity);
-
-            //var activity = _mapper.Map<Activity>(ActivityDto);
-
-            if (await _actService.CancelActivity(idActivity) == 0)
+            if (await _actService.CancelActivity(activityDtoResch.idActivity) == 0)
             {
                 ModelState.AddModelError("", $"Algo salió mal al cancelar la actividad.");
                 return StatusCode(500, ModelState);
             }
 
-            //return CreatedAtRoute("GetProperty", new { propertyId = property.Id }, property);
-            return NoContent();
+            var itemActivity = _actService.GetActivity(activityDtoResch.idActivity);
+            var activity = _mapper.Map<ActivityDto>(itemActivity);
+
+            return Ok(activity);
 
         }
         
@@ -138,7 +135,7 @@ namespace ApiTestTrueHome.Controllers
         }
 
         [HttpGet("GetActivitiesForStatus")]
-        public IActionResult GetActivitiesForStatus([FromQuery] ActivityListStatusDto activityListStatusDto)
+        public IActionResult GetActivitiesForStatus([FromBody] ActivityDtoRequest activityListStatusDto)
         {
             var listActivities = _actService.GetActivitiesForStatus(activityListStatusDto.Status, activityListStatusDto.IniSchedule, activityListStatusDto.EndSchedule);
 
