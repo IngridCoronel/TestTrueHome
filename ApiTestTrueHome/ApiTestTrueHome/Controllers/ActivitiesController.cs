@@ -36,9 +36,41 @@ namespace ApiTestTrueHome.Controllers
             {
                 return NotFound();
             }
-            var itemActivity = _mapper.Map<List<ActivityDto>>(listActivities);
-        
-            return Ok(itemActivity);
+            //var itemActivity = _mapper.Map<List<ActivityDto>>(listActivities);
+
+            //return Ok(itemActivity);
+            var listSurveys = _surveyService.GetSurveys();
+
+            if (listActivities == null || listActivities.Count == 0)
+            {
+                return NotFound();
+            }
+
+            var qry = listActivities.GroupJoin(
+                        listSurveys,
+                        lAct => lAct.Id,
+                        lSur => lSur.Activity_Id,
+                        (act, sur) => new
+                        {
+                            listActivities = act,
+                            listSurveys = sur
+                        })
+                     .SelectMany(
+                         x => x.listSurveys.DefaultIfEmpty(new Survey()),
+                         (act, sur) => new ActivityDto
+                         {
+
+                             Answers = sur.Answers,
+                             Id = act.listActivities.Id,
+                             Schedule = act.listActivities.Schedule,
+                             Created_at = act.listActivities.Created_at,
+                             Status = act.listActivities.Status,
+                             Title = act.listActivities.Title,
+                             Property = new PropertyDto() { Id = act.listActivities.Property.Id, Title = act.listActivities.Property.Title, Address = act.listActivities.Property.Address, Description = act.listActivities.Property.Description }
+
+                         }
+                         );
+            return Ok(qry);
         }
 
         [HttpGet("GetActivity/{activityId:int}")]
@@ -86,15 +118,47 @@ namespace ApiTestTrueHome.Controllers
             {
                 return NotFound();
             }
-            var itemActivity = _mapper.Map<List<ActivityDto>>(listActivities);
+            //var itemActivity = _mapper.Map<List<ActivityDto>>(listActivities);
 
-            return Ok(itemActivity);
+            var listSurveys = _surveyService.GetSurveys();
+
+            if (listActivities == null || listActivities.Count == 0)
+            {
+                return NotFound();
+            }
+
+            var qry = listActivities.GroupJoin(
+                        listSurveys,
+                        lAct => lAct.Id,
+                        lSur => lSur.Activity_Id,
+                        (act, sur) => new
+                        {
+                            listActivities = act,
+                            listSurveys = sur
+                        })
+                     .SelectMany(
+                         x => x.listSurveys.DefaultIfEmpty(new Survey()),
+                         (act, sur) => new ActivityDto
+                         {
+
+                             Answers = sur.Answers,
+                             Id = act.listActivities.Id,
+                             Schedule = act.listActivities.Schedule,
+                             Created_at = act.listActivities.Created_at,
+                             Status = act.listActivities.Status,
+                             Title = act.listActivities.Title,
+                             Property = new PropertyDto() { Id = act.listActivities.Property.Id, Title = act.listActivities.Property.Title, Address = act.listActivities.Property.Address, Description = act.listActivities.Property.Description }
+
+                         }
+                         );
+
+            return Ok(qry);
         }
 
         [HttpPut("RescheduleActivitie")]
-        public async Task<ActionResult> RescheduleActivity([FromBody] ActivityDtoRequest activityDtoResch)
+        public async Task<ActionResult> RescheduleActivity([FromBody] ActivityReschDto activityDtoResch)
         {
-            var actResch = await _actService.RescheduleActivity(activityDtoResch.idActivity, activityDtoResch.newScheduleDay);
+            var actResch = await _actService.RescheduleActivity(activityDtoResch.Id, activityDtoResch.Schedule);
 
             //if (await _actService.RescheduleActivity(activityDtoResch.idActivity, activityDtoResch.newScheduleDay) != "Ok")
             if (actResch != "Ok")
@@ -105,7 +169,7 @@ namespace ApiTestTrueHome.Controllers
             }
 
 
-            var itemActivity = _actService.GetActivity(activityDtoResch.idActivity);
+            var itemActivity = _actService.GetActivity(activityDtoResch.Id);
             var activity = _mapper.Map<ActivityDto>(itemActivity);
 
             return Ok(activity);
@@ -192,9 +256,45 @@ namespace ApiTestTrueHome.Controllers
             {
                 return NotFound();
             }
-            var itemActivity = _mapper.Map<List<ActivityDto>>(listActivities);
+            //var itemActivity = _mapper.Map<List<ActivityDto>>(listActivities);
 
-            return Ok(itemActivity);
+            //return Ok(itemActivity);
+
+            //var listActivities = _actService.GetActivitiesAll();
+            var listSurveys = _surveyService.GetSurveys();
+
+            if (listActivities == null || listActivities.Count == 0)
+            {
+                return NotFound();
+            }
+
+            var qry = listActivities.GroupJoin(
+                        listSurveys,
+                        lAct => lAct.Id,
+                        lSur => lSur.Activity_Id,
+                        (act, sur) => new
+                        {
+                            listActivities = act,
+                            listSurveys = sur
+                        })
+                     .SelectMany(
+                         x => x.listSurveys.DefaultIfEmpty(new Survey()),
+                         (act, sur) => new ActivityDto
+                         {
+
+                             Answers = sur.Answers,
+                             Id = act.listActivities.Id,
+                             Schedule = act.listActivities.Schedule,
+                             Created_at = act.listActivities.Created_at,
+                             Status = act.listActivities.Status,
+                             Title = act.listActivities.Title,
+                             Property = new PropertyDto() { Id = act.listActivities.Property.Id, Title = act.listActivities.Property.Title, Address = act.listActivities.Property.Address, Description = act.listActivities.Property.Description }
+
+                         }
+                         );
+
+            return Ok(qry);
+
         }
 
     }

@@ -26,12 +26,18 @@ namespace ApiTestTrueHome.Services
         {
 
             //var x = _activityRepository.Get(p => p.Id == survey.Activity_Id).Result.Where(s => s.Status == "Active").FirstOrDefault();
-            var x = _activityRepository.Get(p => p.Id == survey.Activity_Id).Result.FirstOrDefault();
+            var act = _activityRepository.Get(p => p.Id == survey.Activity_Id).Result.FirstOrDefault();
            
-            if (x == null)
+            if (act == null)
                 return "No existe el id de la actividad.";
 
-            //survey.Activity = x;
+            if (act.Status == "Canceled")
+                return "La actividad está cancelada, no es posible agregar una encuesta.";
+
+            var surv = _repository.Get(p => p.Activity_Id == survey.Activity_Id).Result.FirstOrDefault();
+
+            if (surv != null)
+                return "La actividad ya tiene asociada una encuesta.";
 
             _repository.Insert(survey);
             _unitOfWork.Save();
@@ -46,9 +52,10 @@ namespace ApiTestTrueHome.Services
 
         public List<Survey> GetSurveys()
         {
-            DateTime IniDate = DateTime.UtcNow.AddDays(-3);
-            DateTime EndDate = DateTime.UtcNow.AddDays(14);
-            return _repository.Get(p => p.Activity.Schedule >= IniDate && p.Activity.Schedule <= EndDate, includeProperties: "Activity,Activity.Property").Result.OrderBy(a => a.Activity.Schedule).ToList();
+            //DateTime IniDate = DateTime.UtcNow.AddDays(-3);
+            //DateTime EndDate = DateTime.UtcNow.AddDays(14);
+            //return _repository.Get(p => p.Activity.Schedule >= IniDate && p.Activity.Schedule <= EndDate, includeProperties: "Activity,Activity.Property").Result.OrderBy(a => a.Activity.Schedule).ToList();
+            return _repository.Get(includeProperties: "Activity,Activity.Property").Result.OrderBy(a => a.Activity.Schedule).ToList();
 
             //return null;
         }

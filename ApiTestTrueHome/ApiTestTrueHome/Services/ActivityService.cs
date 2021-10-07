@@ -39,7 +39,7 @@ namespace ApiTestTrueHome.Services
             {
                 //Propiedad desactivada
                 //return false;
-                return "No es posible agregar una actividad a una propiedad desactivada o no existente";
+                return "No es posible agregar una actividad a una propiedad desactivada o inexistente";
             }
 
             //No traslapar actividades
@@ -82,7 +82,7 @@ namespace ApiTestTrueHome.Services
             var act = _repository.Get(p => p.Id == idActivity).Result.FirstOrDefault();
             
             if (act == null)
-                return "No existe una actividad con ese Id.";
+                return "Verifique que el id de la actividad sea válido o esté activo.";
 
             //Actividad cancelada
             if (act.Status == "Canceled")
