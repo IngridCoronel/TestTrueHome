@@ -15,9 +15,9 @@ namespace ApiTestTrueHome.Models.Dtos
         public string Address { get; set; }
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
-        //public DateTime Created_at { get; set; }
-        //public DateTime Updated_at { get; set; }
-        //public DateTime Disabled_at { get; set; }
+        public DateTime Created_at { get; set; }
+        public DateTime Updated_at { get; set; }
+        public DateTime Disabled_at { get; set; }
         public string Status { get; set; }
 
     }

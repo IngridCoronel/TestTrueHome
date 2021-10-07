@@ -78,7 +78,7 @@ namespace ApiTestTrueHome.Controllers
         }
         
         [HttpGet("GetActivitiesForDay")]
-        public IActionResult GetActivitiesForDay([FromBody] ActivityDtoRequest activityDtoResch)
+        public IActionResult GetActivitiesForDay([FromQuery] ActivityDtoRequest activityDtoResch)
         {
             var listActivities = _actService.GetActivitiesForDay(activityDtoResch.idActivity, activityDtoResch.newScheduleDay);
 
@@ -162,7 +162,6 @@ namespace ApiTestTrueHome.Controllers
 
                          }
                          );
-            var x = qry.ToList();
 
             //ActivityDto y = listActivities.SelectMany
             // (

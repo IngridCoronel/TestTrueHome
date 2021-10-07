@@ -13,6 +13,7 @@ namespace ApiTestTrueHome.TrueHomeMapper
         public TrueHomeMappers()
         {
             CreateMap<Property, PropertyDto>().ReverseMap();
+            CreateMap<Property, PropertyAllDto>().ReverseMap();
             CreateMap<Activity, ActivityDto>().ReverseMap();
             CreateMap<Survey, SurveyDto>().ReverseMap();
         }

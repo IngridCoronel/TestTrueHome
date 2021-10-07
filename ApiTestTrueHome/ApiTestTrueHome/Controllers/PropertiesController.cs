@@ -30,11 +30,11 @@ namespace ApiTestTrueHome.Controllers
         {
             var listProperties = await _ctService.GetProperties();
 
-            var listPropertiesDto = new List<PropertyDto>();
+            var listPropertiesDto = new List<PropertyAllDto>();
 
             foreach(var list in listProperties)
             {
-                listPropertiesDto.Add(_mapper.Map<PropertyDto>(list));
+                listPropertiesDto.Add(_mapper.Map<PropertyAllDto>(list));
             }
 
             return Ok(listPropertiesDto);
@@ -74,14 +74,15 @@ namespace ApiTestTrueHome.Controllers
             property.Created_at = DateTime.UtcNow;
             property.Updated_at = DateTime.UtcNow;
 
-            if (!_ctService.CreateProperty(property))
+            var prop = _ctService.CreateProperty(property);
+
+            if (! prop)
             {
                 ModelState.AddModelError("",$"Algo salió mal al guardar el registro {property.Title}.");
                 return StatusCode(500, ModelState);
             }
 
-            //return CreatedAtRoute("GetProperty", new {propertyId = property.Id}, property);
-            return NoContent();
+            return Ok(propertyDto);
         }
 
         [HttpPut("UpdateProperty")]
@@ -112,13 +113,14 @@ namespace ApiTestTrueHome.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            //return CreatedAtRoute("GetProperty", new { propertyId = property.Id }, property);
-            return NoContent();
+            itemProperty = _ctService.GetProperty(propertyDto.Id);
+            var prop = _mapper.Map<PropertyDto>(itemProperty);
 
+            return Ok(prop);
         }
 
         [HttpDelete("DisableProperty")]
-        public async Task<IActionResult> DeleteProperty([FromBody] PropertyDto propertyDto)
+        public async Task<IActionResult> DeleteProperty([FromBody] PropertyIdDto propertyDto)
         {
 
             if (!_ctService.ExistProperty(propertyDto.Id))
@@ -127,11 +129,6 @@ namespace ApiTestTrueHome.Controllers
             }
 
             var itemProperty = _ctService.GetProperty(propertyDto.Id);
-            var propertyCreated = itemProperty.Created_at;
-            var propertyUdated = itemProperty.Updated_at;
-            var propertyTitle = itemProperty.Title;
-            var propertyAddress = itemProperty.Address;
-            var propertyDescription = itemProperty.Description;
 
             if (itemProperty.Status == "Disabled")
             {
@@ -139,24 +136,17 @@ namespace ApiTestTrueHome.Controllers
                 return StatusCode(404, ModelState);
             }
 
-            var property = _mapper.Map<Property>(propertyDto);
-            property.Updated_at = propertyUdated;
-            property.Created_at = propertyCreated;
-            property.Disabled_at = DateTime.UtcNow;
-            property.Title = propertyTitle;
-            property.Address = propertyAddress;
-            property.Description = propertyDescription;
-            property.Status = "Disabled";
+            itemProperty.Disabled_at = DateTime.UtcNow;
+            itemProperty.Status = "Disabled";
 
 
-            if (await _ctService.UpdateProperty(property) == 0)
+            if (await _ctService.UpdateProperty(itemProperty) == 0)
             {
-                ModelState.AddModelError("", $"Algo salió mal al actualizar el registro {property.Title}.");
+                ModelState.AddModelError("", $"Algo salió mal al actualizar el registro {itemProperty.Title}.");
                 return StatusCode(500, ModelState);
             }
 
-            //return CreatedAtRoute("GetProperty", new { propertyId = property.Id }, property);
-            return NoContent();
+            return Ok(itemProperty);
 
 
         }

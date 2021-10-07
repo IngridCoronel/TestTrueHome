@@ -48,7 +48,7 @@ namespace ApiTestTrueHome.Services
 
         public async Task<ICollection<Property>> GetProperties()
         {
-            return (await _repository.Get()).OrderBy(c => c.Title).ToList();
+            return (await _repository.Get()).OrderBy(c => c.Created_at).ToList();
         }
 
         public Property GetProperty(int propertyId)
