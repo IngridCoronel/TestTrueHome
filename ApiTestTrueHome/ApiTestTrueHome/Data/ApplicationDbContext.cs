@@ -1,5 +1,6 @@
 ﻿using ApiTestTrueHome.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace ApiTestTrueHome.Data
         public DbSet<Property> Property { get; set; }
         public DbSet<Activity> Activity { get; set; }
         public DbSet<Survey> Survey { get; set; }
+
+       
     }
 }

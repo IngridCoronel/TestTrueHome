@@ -8,9 +8,9 @@ namespace ApiTestTrueHome.Services.IServices
 {
     public interface ISurveyService
     {
-        bool CreateSurvey(Survey survey);
-        Activity GetSurvey(int surveyId);
-        List<Activity> GetSurvies(int activityId);
+        string CreateSurvey(Survey survey);
+        Survey GetSurvey(int surveyId);
+        List<Survey> GetSurveys();
 
     }
 }

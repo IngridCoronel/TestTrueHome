@@ -8,12 +8,12 @@ namespace ApiTestTrueHome.Services.IServices
 {
     public interface IActivityService
     {
-        bool CreateActivity(Activity activity);
+        string CreateActivity(Activity activity);
         Activity GetActivity(int activityId);
         List<Activity> GetActivities(int idProperty);
         List<Activity> GetActivitiesForDay(int idProperty, DateTime scheduleDay);
-        Task<int> RescheduleActivity(int idActivity, DateTime newScheduleDay);
-        Task<int> CancelActivity(int idActivity);
+        Task<string> RescheduleActivity(int idActivity, DateTime newScheduleDay);
+        Task<string> CancelActivity(int idActivity);
         List<Activity> GetActivitiesAll();
         List<Activity> GetActivitiesForStatus(string status, DateTime iniSchedule, DateTime endSchedule);
 

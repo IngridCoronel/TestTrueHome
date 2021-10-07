@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace ApiTestTrueHome.Controllers
 {
-    [Route("Survies")]
+    [Route("Surveys")]
     [ApiController]
-    public class SurviesController : Controller
+    public class SurveysController : Controller
     {
         private readonly ISurveyService _suvService;
         private readonly IMapper _mapper;
 
-        public SurviesController(ISurveyService suvService, IMapper mapper)
+        public SurveysController(ISurveyService suvService, IMapper mapper)
         {
             _suvService = suvService;
             _mapper = mapper;
@@ -36,13 +36,15 @@ namespace ApiTestTrueHome.Controllers
 
             var survey = _mapper.Map<Survey>(SurveyDto);
 
-            if (!_suvService.CreateSurvey(survey))
+            var survCreat = _suvService.CreateSurvey(survey);
+
+            if (survCreat != "Ok")
             {
-                ModelState.AddModelError("", $"Algo salió mal al guardar el registro.");
+                ModelState.AddModelError("", survCreat);
                 return StatusCode(500, ModelState);
             }
 
-            return NoContent();
+            return Ok(SurveyDto);
         }
         
     }

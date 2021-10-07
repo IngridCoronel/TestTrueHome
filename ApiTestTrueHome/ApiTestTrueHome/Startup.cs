@@ -40,6 +40,8 @@ namespace ApiTestTrueHome
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IPropertyService, PropertyService>();
+            services.AddScoped<ISurveyService, SurveyService>();
+            services.AddScoped<ISurveyRepository, SurveyRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper(typeof(TrueHomeMappers));

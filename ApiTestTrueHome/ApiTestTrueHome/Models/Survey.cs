@@ -9,6 +9,11 @@ namespace ApiTestTrueHome.Models
 {
     public class Survey
     {
+        public Survey()
+        {
+            Created_at = DateTime.UtcNow;
+        }
+
         [Key]
         public int Id { get; set; }
         [Required(ErrorMessage = "Answers is required")]

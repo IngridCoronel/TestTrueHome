@@ -16,6 +16,7 @@ namespace ApiTestTrueHome.Models
         public DateTime Schedule { get; set; }
         [Required(ErrorMessage = "El campo Title es obligatorio")]
         public string Title { get; set; }
+        public DateTime Created_at { get; set; }
         public string Status { get; set; }
 
         private string condition;
@@ -34,11 +35,16 @@ namespace ApiTestTrueHome.Models
                 {
                     condition = "Finalizada";
                 }
+                else if (Status == "Canceled")
+                {
+                    condition = "Cancelada";
+                }
                 return condition;
             }
             set { condition = value; }
         }
         public int Property_Id { get; set; }
         public PropertyDto Property { get; set; }
+        public string Answers { get; set; }
     }
 }
